@@ -1,5 +1,8 @@
 import openai
 import telebot
+import transformers
+import torch
+import numpy as np
 #from control import printfunc
 
 token = '5586996454:AAEcrUpY12cWspCpjJ51E0kFShePIdgmB8A'
