@@ -1,31 +1,33 @@
 import openai
 import telebot
-import transformers
-import torch
-import numpy as np
-#from control import printfunc
+import aiogram
+from aiogram import Bot, types
+from aiogram.dispatcher import Dispatcher
+import os
+from aiogram.utils import executor
+#from """control import printfunc
 
 token = '5586996454:AAEcrUpY12cWspCpjJ51E0kFShePIdgmB8A'
-bot = telebot.TeleBot(token)
+openai.api_key = "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"
 
+bot = Bot(token)
+dp=Dispatcher(bot)
 
+@dp.message_handler()
+async def send(message: types.Message):
+    openai.api_key = os.getenv("OPENAI_API_KEY")
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    bot.send_message(message.chat.id, 'Добро пожаловать в ChatGPT! этот проект создан в стенах ЛГТУ ))')
-    print(message)
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=message.text,
+        temperature=0.5,
+        max_tokens=60,
+        top_p=1.0,
+        frequency_penalty=0.5,
+        presence_penalty=0.0,
+        stop=["You:"]
+    )
+        await message.answer(response['choices'][0]['text'])
 
-@bot.message_handler(commands=['print'])
-def start(message):
-    bot.send_message(message.chat.id, 'Напиши текст который надо распечатать.')
+        executor.start_polling(dp, skip_updates=True)
 
-@bot.message_handler(commands=['cmd'])
-def start(message):
-    bot.send_message(message.chat.id, 'Напиши текст который надо распечатать.')
-
-@bot.message_handler()
-def start(message):
-    #printfunc(message.text)
-    print(message)
-
-bot.polling(none_stop=True)
